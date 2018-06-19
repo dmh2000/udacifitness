@@ -7,6 +7,7 @@ import {  View
 
 import AddEntry from './components/AddEntry';
 import History from './components/History';
+import { gray } from './utils/colors';
 
 export default class App extends React.Component {
   handlePress = () => {
