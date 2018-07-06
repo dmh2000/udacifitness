@@ -3,14 +3,14 @@ import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducers';
 import {  View, Platform} from 'react-native';
-import {TabNavigator} from 'react-navigation';
+import {createBottomTabNavigator} from 'react-navigation';
 
 import AddEntry from './components/AddEntry';
 import History from './components/History';
 import { purple,white } from './utils/colors';
 import {FontAwesome, Ionicons} from '@expo/vector-icons';
 
-const Tabs = TabNavigator ({
+const Tabs = createBottomTabNavigator ({
     History: {
       screen: History,
       navigationOptions: {
@@ -22,7 +22,7 @@ const Tabs = TabNavigator ({
       screen: AddEntry,
       navigationOptions: {
         tabBarLabel: 'Add Entry',
-        tabBarIcon: ({tintcolor}) => <FontAwesome name='plus-square' size={30} color={tintColor}/>
+        tabBarIcon: ({tintColor}) => <FontAwesome name='plus-square' size={30} color={tintColor}/>
       }
     }, 
   },
