@@ -2,13 +2,23 @@ import React from 'react';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducers';
-import {  View, Platform} from 'react-native';
-import {createBottomTabNavigator} from 'react-navigation';
+import {  View, Platform, StatusBar} from 'react-native';
+import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
+import {Constants} from 'expo';
 
 import AddEntry from './components/AddEntry';
 import History from './components/History';
 import { purple,white } from './utils/colors';
 import {FontAwesome, Ionicons} from '@expo/vector-icons';
+import EntryDetail from './components/EntryDetail';
+
+function UdaciStatusBar ({backgroundColor,...props}) {
+  return (
+    <View style={{backgroundColor, height: Constants.statusBarHeight}}>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props}/>
+    </View>
+  )
+}
 
 const Tabs = createBottomTabNavigator ({
     History: {
@@ -48,6 +58,24 @@ const Tabs = createBottomTabNavigator ({
   }
 });
 
+const MainNavigator = createStackNavigator({
+  Home: {
+    screen: Tabs,
+    navigationOptions: {
+      header:null
+    }
+  },
+  EntryDetail : {
+    screen:EntryDetail,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor:purple
+      }
+    }
+  }
+});
+
 export default class App extends React.Component {
   handlePress = () => {
     alert('hello');
@@ -61,8 +89,8 @@ export default class App extends React.Component {
     return (
       <Provider store = {createStore(reducer)}>
       <View style={{flex:1}}>
-        <View style={{height:20}}/>
-        <Tabs/>
+        <UdaciStatusBar backgroundColor={purple} barStyle='light-content' />
+        <MainNavigator/>
       </View>
       </Provider>
     );

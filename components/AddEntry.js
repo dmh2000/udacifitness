@@ -8,6 +8,8 @@ import {  View,
   Platform,
   StyleSheet
 } from 'react-native';
+import {NavigationActions} from 'react-navigation';
+
 
 import {getMetricMetaInfo,timeToString,getDailyReminderValue} from '../utils/helpers';
 import UdaciSlider from './UdaciSlider';
@@ -95,6 +97,7 @@ class AddEntry extends Component {
     );
 
     // navigate to home
+    this.toHome()
 
     // save to 'db'
     submitEntry({key,entry});
@@ -111,8 +114,14 @@ class AddEntry extends Component {
     }));
 
     // route to home
-    
+    this.toHome()
 
+  }
+  
+  toHome = () => {
+    this.props.navigation.dispatch(NavigationActions.back({
+      key: 'AddEntry'
+    }))
   }
   
   render = () => {
