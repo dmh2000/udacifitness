@@ -6,6 +6,7 @@ import {  View, Platform, StatusBar} from 'react-native';
 import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import {Constants} from 'expo';
 
+import Live from './components/Live';
 import AddEntry from './components/AddEntry';
 import History from './components/History';
 import { purple,white } from './utils/colors';
@@ -35,6 +36,13 @@ const Tabs = createBottomTabNavigator ({
         tabBarIcon: ({tintColor}) => <FontAwesome name='plus-square' size={30} color={tintColor}/>
       }
     }, 
+    Live : {
+      screen: Live,
+      navigationOptions: {
+        tabBarLabel: 'Live',
+        tabBarIcon: ({tintColor}) => <FontAwesome name='ambulance' size={30} color={tintColor}/>
+      }
+    }
   },
   {
     navigationOptions: {
