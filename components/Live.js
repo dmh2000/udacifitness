@@ -9,11 +9,12 @@ import {white,purple} from '../utils/colors';
 export default class Live extends Component {
   state = {
     coords:null,
-    status:null,
+    status:'undetermined',
     diretion:''
   }
 
   componentDidMount() {
+    console.log('1');
     Permissions.getAsync(Permissions.LOCATION)
     .then(({status}) => {
       if (status === 'granted') {
@@ -29,7 +30,8 @@ export default class Live extends Component {
   }
 
   askPermission = () => {
-    Permission.askAsync(Permission.LOCATION)
+    console.log('ask');
+    Permissions.askAsync(Permissions.LOCATION)
     .then( ({status}) => {
       if (status === 'granted') {
         return this.setLocation();
@@ -44,23 +46,26 @@ export default class Live extends Component {
   }
 
   setLocation= () => {
+    console.log('set location');
+
     Location.watchPositionAsync({
       enableHighAccuracy:true,
       timeInterval:1,
       distanceInterval:1,
-    }), ({ coords }) => {
+    } ,({ coords }) => {
       const newDirection = calculateDirection(coords.heading);
       const {direction} = this.state;
-
+      console.log('positions',coords)
       this.setState(() => ({
         coords,
         status:'granted',
         direction: newDirection
       }))
-    }
+    });
   }
 
   render() {
+    console.log('render',this.state.status);
     const {status,coords,direction} = this.state;
 
     if (status === null) {
