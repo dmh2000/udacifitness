@@ -56,7 +56,7 @@ export default class Live extends Component {
     } ,({ coords }) => {
       const newDirection = calculateDirection(coords.heading);
       const {direction,bounceValue} = this.state;
-      if (newDirection === direction) {
+      if (newDirection !== direction) {
         Animated.sequence([
           Animated.timing(bounceValue,{duration:200,toValue:1.04}),
           Animated.spring(bounceValue, {toValue:1, friction:4})

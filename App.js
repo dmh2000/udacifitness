@@ -2,7 +2,7 @@ import React from 'react';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 import reducer from './reducers';
-import {  View, Platform, StatusBar} from 'react-native';
+import {  View, Platform, StatusBar, Text} from 'react-native';
 import {createBottomTabNavigator, createStackNavigator} from 'react-navigation';
 import {Constants} from 'expo';
 
@@ -12,6 +12,8 @@ import History from './components/History';
 import { purple,white } from './utils/colors';
 import {FontAwesome, Ionicons} from '@expo/vector-icons';
 import EntryDetail from './components/EntryDetail';
+import {setLocalNotification, getStatus} from './utils/helpers';
+
 
 function UdaciStatusBar ({backgroundColor,...props}) {
   return (
@@ -85,12 +87,14 @@ const MainNavigator = createStackNavigator({
 });
 
 export default class App extends React.Component {
-  handlePress = () => {
-    alert('hello');
-  }
 
+  componentWillMount() {
+    this.xstatus = 'will';
+    setLocalNotification();
+  }
+  
   componentDidMount() {
-    
+    this.xstatus = 'did';
   }
 
   render() {
@@ -99,6 +103,7 @@ export default class App extends React.Component {
       <View style={{flex:1}}>
         <UdaciStatusBar backgroundColor={purple} barStyle='light-content' />
         <MainNavigator/>
+        <Text>{getStatus() + this.xstatus}</Text>
       </View>
       </Provider>
     );

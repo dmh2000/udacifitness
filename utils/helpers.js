@@ -1,9 +1,12 @@
 // utils/helpers.js
 
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, AsyncStorage} from 'react-native';
 import {FontAwesome, MaterialIcons, MaterialCommunityIcons} from '@expo/vector-icons';
 import {white,black,red,orange,blue,lightPurp,pink} from './colors';
+import {Notifications, Permissions} from 'expo';
+
+const NOTIFICATION_KEY = 'UdaciFitness:notifications';
 
 const styles = StyleSheet.create({
   iconContainer: {
@@ -149,7 +152,7 @@ export function calculateDirection (heading) {
     direction = 'Calculating'
   }
 
-  return direction
+  return direction;
 }
 
 export function timeToString (time = Date.now()) {
@@ -162,4 +165,67 @@ export function getDailyReminderValue() {
   return {
     today: 'Don\'t forget to log your data today!'
   };
+}
+
+ function clearLocalNotification () {
+  return AsyncStorage.removeItem(NOTIFICATION_KEY)
+   .then( Notifications.cancelAllScheduledNotificationsAsync);
+}
+
+ function createNotification() {
+  return {
+    title: 'Log your stats!',
+    body:'Don\'t forget to log your stats',
+    ios: {
+      sound: true
+    },
+    android: {
+      sound: true,
+      priority: 'high',
+      sticky:false,
+      vibrate:true,
+    }
+  };
+}
+
+let nstatus = 'none';
+
+export function getStatus() {
+  return nstatus;
+}
+export function setLocalNotification() {
+  nstatus = '1';
+  AsyncStorage.getItem(NOTIFICATION_KEY)
+    .then((data) => {
+      nstatus = '2';
+      return JSON.parse(data);
+    })
+    .then((data) => {
+      nstatus = '3';
+      if (data === null) {
+        nstatus = '4';
+        Permissions.askAsync(Permissions.NOTIFICATIONS)
+          .then(( {status}) => {
+            nstatus = status;
+            if (status === 'granted') {
+              Notifications.cancelAllScheduledNotificationsAsync();
+
+              let tomorrow = new Date();
+              tomorrow.setDate(tomorrow.getDate() + 1);
+              tomorrow.setHours(20);
+              tomorrow.setMinutes(0);
+
+              Notifications.scheduleLocalNotificationAsync(
+                createNotification(),
+                {
+                  time:tomorrow,
+                  repeat: 'day',
+                }
+              );
+
+              AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
+            }
+          });
+      }
+    });
 }
