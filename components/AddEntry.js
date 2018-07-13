@@ -11,7 +11,14 @@ import {  View,
 import {NavigationActions} from 'react-navigation';
 
 
-import {getMetricMetaInfo,timeToString,getDailyReminderValue} from '../utils/helpers';
+import {
+  getMetricMetaInfo,
+  timeToString,
+  getDailyReminderValue,
+  clearLocalNotification,
+  setLocalNotification
+} from '../utils/helpers';
+
 import UdaciSlider from './UdaciSlider';
 import UdaciStepper from './UdaciStepper';
 import DateHeader from './DateHeader';
@@ -103,6 +110,8 @@ class AddEntry extends Component {
     submitEntry({key,entry});
 
     // clear local notification
+    clearLocalNotification()
+      .then(setLocalNotification);
   }
 
   reset = () => {

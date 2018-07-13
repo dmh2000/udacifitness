@@ -167,12 +167,7 @@ export function getDailyReminderValue() {
   };
 }
 
- function clearLocalNotification () {
-  return AsyncStorage.removeItem(NOTIFICATION_KEY)
-   .then( Notifications.cancelAllScheduledNotificationsAsync);
-}
-
- function createNotification() {
+function createNotification() {
   return {
     title: 'Log your stats!',
     body:'Don\'t forget to log your stats',
@@ -188,25 +183,23 @@ export function getDailyReminderValue() {
   };
 }
 
-let nstatus = 'none';
+export function clearLocalNotification () {
+  return AsyncStorage.removeItem(NOTIFICATION_KEY)
+   .then( Notifications.cancelAllScheduledNotificationsAsync);
+}
 
 export function getStatus() {
   return nstatus;
 }
-export function setLocalNotification() {
-  nstatus = '1';
+export function setLocalNotification () {
   AsyncStorage.getItem(NOTIFICATION_KEY)
+    .then(JSON.parse)
     .then((data) => {
-      nstatus = '2';
-      return JSON.parse(data);
-    })
-    .then((data) => {
-      nstatus = '3';
+      console.log('1');
       if (data === null) {
-        nstatus = '4';
         Permissions.askAsync(Permissions.NOTIFICATIONS)
-          .then(( {status}) => {
-            nstatus = status;
+          .then(({ status }) => {
+            console.log(status);
             if (status === 'granted') {
               Notifications.cancelAllScheduledNotificationsAsync();
 
@@ -218,14 +211,21 @@ export function setLocalNotification() {
               Notifications.scheduleLocalNotificationAsync(
                 createNotification(),
                 {
-                  time:tomorrow,
+                  time: tomorrow,
                   repeat: 'day',
                 }
               );
 
               AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true));
             }
+            else {
+              console.log('else');
+            }
           });
+      }
+      else {
+        console.log(data);
       }
     });
 }
+

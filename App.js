@@ -12,7 +12,7 @@ import History from './components/History';
 import { purple,white } from './utils/colors';
 import {FontAwesome, Ionicons} from '@expo/vector-icons';
 import EntryDetail from './components/EntryDetail';
-import {setLocalNotification, getStatus} from './utils/helpers';
+import {setLocalNotification} from './utils/helpers';
 
 
 function UdaciStatusBar ({backgroundColor,...props}) {
@@ -88,13 +88,9 @@ const MainNavigator = createStackNavigator({
 
 export default class App extends React.Component {
 
-  componentWillMount() {
-    this.xstatus = 'will';
-    setLocalNotification();
-  }
-  
   componentDidMount() {
-    this.xstatus = 'did';
+    console.log('did mount');
+    setLocalNotification();
   }
 
   render() {
@@ -103,7 +99,6 @@ export default class App extends React.Component {
       <View style={{flex:1}}>
         <UdaciStatusBar backgroundColor={purple} barStyle='light-content' />
         <MainNavigator/>
-        <Text>{getStatus() + this.xstatus}</Text>
       </View>
       </Provider>
     );
